@@ -8,15 +8,10 @@ import mysql from 'mysql';
 const app = express();
 const _path = path;
 const router = express.Router();
-const __dirname ="./"
+app.use(express.json());
+
+const __dirname = "./"
 var sql = mssql;
-
-
-
-app.get('/', (req, res) => {
-    res.sendFile('index.html', { root: __dirname });
-});
-
 
 // koppling till databasen
 var con = mysql.createConnection({
@@ -26,21 +21,58 @@ var con = mysql.createConnection({
     database: "db"
 });
 
-
-
-// en upkoppling samt
-let query = "SELECT * FROM Person";
-
-con.connect(function(err) {
+con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
-
-    con.query(query, function (err, result,fields) {
-        if (err) throw err;
-        console.log("Result: " + result,fields);
-      });
 });
-  
+
+let query = "SELECT * FROM Person";
+
+const GETPersons = () => {
+    con.query("SELECT * FROM Person", function (err, result, fields) {
+        if (err) throw err;
+        
+        result.forEach(row => {
+            let ret = "Name: " + row.UserName + " | MailAdress : " + row.EmailAdress;
+            ret;
+        });
+    });
+}
+
+
+app.get('/', (req, res) => {
+    res.sendFile('index.html', { root: __dirname });
+});
+
+
+app.get(`/persons`, (req, res) => {
+    
+    res.status(200).send(
+         con.query("SELECT id, UserName, EmailAdress FROM Person", (err, result) => {
+            // if (err) throw err;
+            console.log(result);
+            res.json(result);
+        })
+    );
+    if (res.status(404)) {
+        res.send(`<p>Error..</p>`);
+    }
+});
+
+//skicka något i /test
+app.post('/test', (req, res) => {
+    if (!req.body.UserName) {
+        return res.status(400).json({
+            status: "error",
+            error: "req body cannot be empty",
+        });
+    }
+   
+     res.status(200).json({
+        status: "Success",
+        data: req.body,
+    })
+});
 
 // PORT
 const port = env.PORT || 3001;
