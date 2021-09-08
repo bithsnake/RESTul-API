@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 const mysql = require("mysql2");
 
 const pool = mysql.createPool({
@@ -10,7 +10,8 @@ const pool = mysql.createPool({
     port: 3306
 });
 
-// let sql = "SELECT * FROM person";
+// TEST
+// let sql = "SELECT * FROM users";
 
 // pool.execute(sql, (err, result) => {
 //     if (err) throw err;

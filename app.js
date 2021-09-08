@@ -16,8 +16,9 @@ app.get('/', function(req, res) {
             <p>GET  /users/id en användare baserat på id </p>
             <p>POST /users - skapar en användare där JSON objektet ska se ut som följande:
             {
-                "UserName" : "namn"
-                "EmailAdress" : "namn@domän.com"
+                "UserName" : "namn",
+                "EmailAdress" : "namn@domän.com",
+                "Password" : "lösenord"
             }
             </p>
 
@@ -38,49 +39,6 @@ app.use((err, req, res, next) => {
         message: "Någonting gick riktigt fel här..",
     });
 });
-
-// var mysql = require('mysql');
-// // koppling till databasen
-// var con = mysql.createConnection({
-//     host: "localhost",
-//     port: 3306,
-//     user: "kimmo",
-//     password: "kimmo123",
-//     database: "db"
-// });
-
-// con.connect(function(err) {	// anslut till databasen
-//   if (err) throw err;
-//   console.log("Connected");
-// });
-
-
-
-
-// app.get('/', function(req, res) {
-//     res.send(`<html><body><h1>Dokumentation av det här APIet</h1></body></html>`);
-//   });
-  
-
-// app.get('/hello', function(req, res) {
-//     res.json({
-//         message: "Hello REST world!"
-//     });
-// });
-
-// app.get('/users', function(req, res) {
-//     var sql = "SELECT ID, UserName, EmailAdress FROM person";
-//     con.query(sql, function(err, result, fields) {
-//         if (err) throw err;
-//         // result.forEach(row => {
-//         //     row.UserName + "<br/>";
-//         // });
-//         // res.json(result).send(`<html><body>${name}</body></html>`);
-//         res.send(`<html><body><h4>${result.UserName}</h4></body></html>`);
-//         res.json(result);
-//         res.status(400).send("<h1>400 Sorry</h1>");
-//     });
-// });
 
 const PORT = process.env.PORT || 3000;
 
