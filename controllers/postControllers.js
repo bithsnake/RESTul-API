@@ -1,11 +1,12 @@
-const Person = require('../models/User.js');
 
+const db = require('../config/db.js');
+const User = require('../models/User.js');
 
 // GET - returnerar alla användare
 exports.getAllUsers = async (req, res, next) => {
     try {
         
-        const [user, _] = await Person.FindAll();
+        const [user, _] = await User.FindAll();
         // 200 = "OK" Lyckades göra en GET på alla användare
         res.status(200).json({ count: user.length, user });
     } catch (error) {
@@ -13,24 +14,25 @@ exports.getAllUsers = async (req, res, next) => {
         // global error handler
         next(error);
     }
-    // res.send("Get all persons route");
+    // res.send("Get all users route");
 };
 // POST - skapar en ny användare
 exports.createNewUser = async (req, res, next) => {
     try {
         // här exporterar jag fälten UserName och EmailAdress från själva body av POST requesten jag skapar i Postman
         let { UserName, EmailAdress, Password } = req.body;
-        let user = new Person(UserName,EmailAdress,Password);
+        let user = new User(UserName,EmailAdress,Password);
         
-        // spara personen i databasen
+        // spara användaren i databasen
         // await måste köras så att den väntar in Promise { <pending> } helt och hållet för att save är en async funktion
         user = await user.Save(); 
 
         console.log(user);
         // 201 = Create lyckades skapa en användare
         res.status(201).json({
-            message: "Användare skapad!"
-        })
+            message: `status : ${res.statusCode}, Lyckades skapa användare! Användarens ID är ${user.insertId}`,
+            new_user: user
+        });
     } catch (error) {
         console.table(error);
         // global error handler
@@ -45,10 +47,10 @@ exports.getUserById = async (req, res, next) => {
         let userId = { id } = req.params.id;
         // vi behöver inte FieldData utan vill bara har Row data så då destructar vi
         // arrayen och lägger till en _
-        let [user, _] = await Person.FindById(userId);
+        let [user, _] = await User.FindById(userId);
         
         // 200 = request var "OK"
-        // user[0] tog mig ett jäkla tag att få till.. så man slipper hak-parenteserna "user": [ { } ]
+        // user[0] tog mig ett jäkla tag att få till.. så man slipper hak-parenteserna i bodyn i Postman/Insomnia dvs t.ex."user": [ { } ]
         res.status(200).json({ user : user[0] });
 
     } catch (error) {
@@ -60,9 +62,9 @@ exports.getUserById = async (req, res, next) => {
 // PUT - ändra en användare
 exports.editUserById = async (req, res, next) => {
     try {
-        let userId = { id } = req.params.id;
+        let userId = req.params.id;
         let userBody = { UserName, EmailAdress, Password } = req.body;
-        let user = new Person(UserName, EmailAdress, Password);
+        let user = new User(UserName, EmailAdress, Password);
 
         user = await user.Edit(userId,userBody.UserName,userBody.EmailAdress,Password);
         
@@ -71,7 +73,10 @@ exports.editUserById = async (req, res, next) => {
             console.log(`202 - Accepted by server: ${res}`)
         }
         // 200 / 202 - lyckades att uppdatera resursen
-        res.status(200 || 204).json({ user: user[0] });
+        res.status(200 || 204).json({
+                message: `status : ${res.statusCode}, Dina uppgifter är uppdaterade på användare med ID ${userId}`,
+                user: user
+            });
     } catch (error) {
         console.table(error);
         next(error);
@@ -83,7 +88,7 @@ exports.deleteUserById = async (req, res, next) => {
     try {
         let userId = { id } = req.params.id;
         let userBody = { UserName, EmailAdress, Password } = req.body;
-        let user = new Person(userId, UserName, EmailAdress, Password);
+        let user = new User(userId, UserName, EmailAdress, Password);
         user = await user.Delete(userId);
         
         // 200 = request var "OK"

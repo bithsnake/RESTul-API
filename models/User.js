@@ -1,5 +1,6 @@
+const db = require('../config/db');
 
-// denna klass är skapad för att kunna använda metoder från klassen gällande personer
+// denna klass är skapad för att kunna använda metoder från klassen gällande användare
 class User {
     constructor(UserName,EmailAdress,Password) {
         this.UserName = UserName;
@@ -30,20 +31,27 @@ class User {
             '${this.Password}'
         )`;
 
-        // här använder jag av mig utav destructor för att inte skicka med en [FieldPacket]
+        // här använder jag av mig utav destructor för att inte skicka med en [FieldPacket], och så slipper att få "null" längst ner i response Body'n
         const [newUser, _] = await db.execute(sql);
-        // const newUser = await db.execute(sql);
-        
         return newUser;
+        
+        
+    }
+    // Logga in en användare
+    static Login(mail, pass) {
+        sql = `
+        SELECT * FROM users WHERE EmailAdress = ? AND password = ?
+        `;
+        return db.execute(sql);
     }
     // ändra en användare
     async Edit(id,UserName,EmailAdress,Password) {
         let sql = `
         UPDATE users
-        SET UserName='${UserName}', EmailAdress='${EmailAdress}, Password='${Password}'
+        SET UserName='${UserName}', EmailAdress='${EmailAdress}', Password='${Password}'
         WHERE id=${id};
         `;
-        const editedUser = await db.execute(sql);
+        const [editedUser,_] = await db.execute(sql);
         console.table(`edit result: ${editedUser}`);
         
         return editedUser;
@@ -60,7 +68,7 @@ class User {
         return deletedUser;
     }
 
-    // hitta alla personer
+    // hitta alla användare
     static FindAll() {
         let sql = "SELECT * FROM users";
         return  db.execute(sql);
