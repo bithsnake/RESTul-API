@@ -4,12 +4,13 @@ const app = express();
 app.use(express.json()); //parsar json body's i request objektet
 
 // root
-app.use("/", require("./routes/postRoutes"));
 app.get('/', function(req, res) {
     res.send(`
     <html style="display: flex; place-content: center; font-size: 1rem;">
         <body style="color: black">
-            <h1 style="color: blue">Dokumentation av det här APIet</h1>
+        <h1 style="color: blue">Dokumentation av det här APIet</h1>
+            <h2><b>OBS för detta api använder jag mig utav MySQL som databas</b></h2>
+
             <h2><b>Hämta alla användare</b></h2>
             <p><b style="color: green">GET /users</b> - returnerar alla användare inkklusive antal</p>
             
@@ -75,7 +76,7 @@ app.get('/', function(req, res) {
 
 // routes
 app.use("/login", require("./routes/loginRoute"));
-app.use("/", require("./routes/postRoutes"));
+app.use("/", require("./routes/userRoutes"));
 
 // en global error handler
 app.use((err, req, res, next) => {

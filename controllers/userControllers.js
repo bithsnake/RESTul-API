@@ -66,7 +66,7 @@ exports.createNewUser = async (req, res, next) => {
 exports.getUserById = async (req, res, next) => {
     try {
         // exporta parametern vi matar in i users/id, och detta fungerar pga
-        // vi har specifierat det i våran route i postRoutes på router.route("/:id") med variabeln :id efter /
+        // vi har specifierat det i våran route i userRoutes på router.route("/:id") med variabeln :id efter /
         let userId = { id } = req.params.id;
         // vi behöver inte FieldData utan vill bara har Row data så då destructar vi
         // arrayen och lägger till en _
