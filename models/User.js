@@ -1,5 +1,4 @@
 const db = require('../config/db');
-
 // denna klass är skapad för att kunna använda metoder från klassen gällande användare
 class User {
     constructor(UserName,EmailAdress,Password) {
@@ -39,8 +38,9 @@ class User {
     }
     // Logga in en användare
     static Login(mail, pass) {
-        sql = `
-        SELECT * FROM users WHERE EmailAdress = ? AND password = ?
+        var sql = `
+        SELECT * FROM users
+        WHERE EmailAdress = '${mail}' AND password = '${pass}'
         `;
         return db.execute(sql);
     }
@@ -73,9 +73,6 @@ class User {
         let sql = "SELECT * FROM users";
         return  db.execute(sql);
     }
-
-    
-
     static FindById(id) {
         let sql = `SELECT * FROM users WHERE id=${id};`; 
         return db.execute(sql);

@@ -14,8 +14,5 @@ router.route("/users/:id")
         .put(postControllers.editUserById)
             .delete(postControllers.deleteUserById);
 
-// router.route("/")
-//     .post(loginController.loginUser);
-
 // här exporterar vi alla routningar
 module.exports = router;
