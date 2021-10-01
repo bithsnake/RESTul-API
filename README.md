@@ -1,4 +1,4 @@
-# RESTul-API
+# RESTful-API
  RESTful APi test
  
  För denna REST API använder jag mig utav MySQL som data bas
